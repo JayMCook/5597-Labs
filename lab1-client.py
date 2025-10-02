@@ -5,6 +5,10 @@ ip_port=('10.128.0.2', 9999)
 s = socket.socket()
 s.connect(ip_port)
 
+#Client recieves ID and displays it upon connection
+client_id = s.recv(1024).decode()
+print(client_id)
+
 while True:
     inp = input('input msg： ').strip()
     if not inp:

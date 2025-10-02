@@ -6,6 +6,8 @@ client_list = {}
 lock = threading.Lock()
 
 def link_handler(link, client, id):
+    #thread lock acts as a key only one thread at a time can hold, and actions with lock will only 
+    #happen when said thread has the lock. This way commands will not overlap when managing the global list
     with lock:
         client_list[id] = client
 
@@ -13,8 +15,11 @@ def link_handler(link, client, id):
     link.sendall(f'Your ID is: {id}'.encode())
     while True:
         client_data = link.recv(1024).decode()
+        #When client requests "list" the IDs are compiled from the client list and displayed to the client
         if client_data == "list":
-            print(f'Active client IDs: {client_list}')
+            with lock:
+                ids = ", ".join(client_list.keys())
+            link.sendall(f"Active client IDs: {ids}".encode())
             continue
         if client_data == "exit":
             print(f'communication end with {id} ({client[0]}: {client[1]})....')
