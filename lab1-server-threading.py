@@ -26,7 +26,7 @@ def link_handler(link, client, id):
             try:
                 _, recieve_id, message = client_data.split(" ", 2)
                 with lock:
-                        if target_id in client_list:
+                        if recieve_id in client_list:
                             client_list[recieve_id].sendall(
                                 f"Message from {id}: {message}".encode()
                             )
