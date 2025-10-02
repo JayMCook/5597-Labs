@@ -10,7 +10,7 @@ client_id = s.recv(1024).decode()
 print(client_id)
 
 while True:
-    inp = input('input msg： ').strip()
+    inp = input('input command： ').strip()
     if not inp:
         continue
     s.sendall(inp.encode())
