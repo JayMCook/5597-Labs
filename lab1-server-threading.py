@@ -10,7 +10,7 @@ def link_handler(link, client, id):
         client_list[id] = client
 
     print(f'server start to receiving msg from {id} ({client[0]}: {client[1]})....')
-    link.sendall(f'Your ID is: {id}')
+    link.sendall(f'Your ID is: {id}'.encode())
     while True:
         client_data = link.recv(1024).decode()
         if client_data == "list":
