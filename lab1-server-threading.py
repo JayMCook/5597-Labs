@@ -22,6 +22,7 @@ print('start socket server，waiting client...')
 while True:
     conn, address = sk.accept()
 
+    client_id = str(random.randint(1000, 9999))
 
     print('create a new thread to receive msg from [%s:%s]' % (address[0], address[1]))
     t = threading.Thread(target=link_handler, args=(conn, address, client_id))
