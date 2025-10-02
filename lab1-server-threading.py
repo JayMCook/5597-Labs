@@ -1,5 +1,6 @@
 import socket
 import threading
+import random
 
 def link_handler(link, client, id):
     print('server start to receiving msg from {id} ({client[0]}: {client[1]})....')
