@@ -13,7 +13,7 @@ def link_handler(link, client, id):
         client_list[id] = link
 
     print(f'server start to receiving msg from {id} ({client[0]}: {client[1]})....')
-    link.sendall(f'Your ID is: {id}. Command list: "list" - Displays a list of the active client IDs. "msg" followed by another client ID and a string - Will send the string along with your client ID to the client whos ID you entered. "exit" - Ends connection and removes client ID from client list.'.encode())
+    link.sendall(f'Your ID is: {id}. \nCommand list: \n"list" - Displays a list of the active client IDs. \n"msg" followed by another client ID and a string - Will send the string along with your client ID to the client whos ID you entered. \n"exit" - Ends connection and removes client ID from client list.'.encode())
     while True:
         client_data = link.recv(1024).decode()
         #When client requests "list" the IDs are compiled from the client list and displayed to the client
