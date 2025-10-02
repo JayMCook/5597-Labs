@@ -23,15 +23,16 @@ def link_handler(link, client, id):
             link.sendall(f'Active client IDs: {ids}'.encode())
             continue
         if client_data.startswith("msg "):
-            _, recieve_id, message = client_data.split(" ", 2)
-            with lock:
-                    if target_id in client_list:
-                        client_list[recieve_id].sendall(
-                            f"Message from {id}: {message}".encode()
-                        )
-                        link.sendall(f"Sent to {recieve_id}".encode())
-                    else:
-                        link.sendall(f"Client {recieve_id} not found".encode())
+            try:
+                _, recieve_id, message = client_data.split(" ", 2)
+                with lock:
+                        if target_id in client_list:
+                            client_list[recieve_id].sendall(
+                                f"Message from {id}: {message}".encode()
+                            )
+                            link.sendall(f"Sent to {recieve_id}".encode())
+                        else:
+                            link.sendall(f"Client {recieve_id} not found".encode())
             except ValueError:
                 link.sendall(b"Usage: msg <id> <message>")
             continue
