@@ -2,16 +2,29 @@ import socket
 import threading
 import random
 
+client_list = {}
+lock = threading.Lock()
+
 def link_handler(link, client, id):
-    print('server start to receiving msg from {id} ({client[0]}: {client[1]})....')
+    with lock:
+        client_list[id] = client
+
+    print(f'server start to receiving msg from {id} ({client[0]}: {client[1]})....')
+    link.sendall(f'Your ID is: {id}')
     while True:
         client_data = link.recv(1024).decode()
+        if client_data == "list":
+            print(f'Active client IDs: {client_list}')
+            continue
         if client_data == "exit":
-            print('communication end with {id} ({client[0]}: {client[1]})....')
+            print(f'communication end with {id} ({client[0]}: {client[1]})....')
             break
-        print('{id} ({client[0]}, {client[1]}) sent {client_data}....' )
-        link.sendall('server had received your msg, {id}'.encode())
+        print(f'{id} ({client[0]}, {client[1]}) sent {client_data}....' )
+        link.sendall(f'server had received your msg, {id}'.encode())
     link.close()
+    with lock:
+        if id in client_list:
+            del client_list[id]
 
 ip_port = ('0.0.0.0', 9999)
 sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.SOCK_STREAM is tcp
