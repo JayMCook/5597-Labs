@@ -10,7 +10,11 @@ def recieve_message(sock):
             data = sock.recv(1024).decode()
             if not data:
                 break
-            print(f"\n{data}") 
+            #Manages the output such that input command comes after the recieved server message
+            sys.stdout.write("\r" + " " * 80 + "\r")  
+            print(f"\n{data}")
+            sys.stdout.write("input command: ")
+            sys.stdout.flush()
         except:
             break
 
@@ -33,5 +37,5 @@ while True:
     if inp == "exit":
         print("communication end！")
         break
-        
+
 s.close()
