@@ -3,6 +3,7 @@ import threading
 import random
 
 client_list = {}
+chat_logs = {}
 lock = threading.Lock()
 
 def link_handler(link, client, id):
@@ -13,7 +14,7 @@ def link_handler(link, client, id):
         client_list[id] = link
 
     print(f'server start to receiving msg from {id} ({client[0]}: {client[1]})....')
-    link.sendall(f'Your ID is: {id}. \nCommand list: \n"list" - Displays a list of the active client IDs. \n"msg" followed by another client ID and a string - Will send the string along with your client ID to the client whos ID you entered. \n"exit" - Ends connection and removes client ID from client list.'.encode())
+    link.sendall(f'Your ID is: {id}. \nCommand list: \n"list" - Displays a list of the active client IDs. \n"msg" followed by another client ID and a string - Will send the string along with your client ID to the client whos ID you entered.\n "history" followed by another client ID - Provides a chat log history between the client and provided client id \n"exit" - Ends connection and removes client ID from client list.'.encode())
     while True:
         client_data = link.recv(1024).decode()
         #When client requests "list" the IDs are compiled from the client list and displayed to the client
@@ -22,6 +23,8 @@ def link_handler(link, client, id):
                 ids = ", ".join(client_list.keys())
             link.sendall(f'Active client IDs: {ids}'.encode())
             continue
+        #When client starts an input with msg, the program checks if it follows the correct syntax, and then sends 
+        #the desired message to the reciever id, or return an error if the syntax is incorrect
         if client_data.startswith("msg "):
             try:
                 _, recieve_id, message = client_data.split(" ", 2)
@@ -34,7 +37,21 @@ def link_handler(link, client, id):
                         else:
                             link.sendall(f"Client {recieve_id} not found".encode())
             except ValueError:
-                link.sendall(b"Usage: msg <id> <message>")
+                link.sendall(b"Usage: msg (recipient id) (desired message)")
+            continue
+        #When client starts an input with history, the program produces a log of their chat history with the provided id
+        if client_data.startswith("history "):
+            try:
+                _, recieve_id = client_data.split(" ", 1)
+                chat_key = tuple(sorted([id, target_id]))
+                with lock:
+                    if chat_key in chat_logs:
+                        history = "\n".join(chat_logs[chat_key])
+                        link.sendall(f"Chat history with {target_id}:\n{history}".encode())
+                    else:
+                        link.sendall(f"No chat history with {target_id}".encode())
+            except ValueError:
+                link.sendall(b"Usage: history (recipient id)")
             continue
         if client_data == "exit":
             print(f'communication end with {id} ({client[0]}: {client[1]})....')
