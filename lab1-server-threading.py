@@ -30,6 +30,12 @@ def link_handler(link, client, id):
                 _, recieve_id, message = client_data.split(" ", 2)
                 with lock:
                         if recieve_id in client_list:
+                            #Log chat into chat history
+                            chat_key = tuple(sorted([id, recieve_id]))
+                            if chat_key not in chat_logs:
+                                chat_logs[chat_key] = []
+                            chat_logs[chat_key].append(f"{id}: {msg}")
+
                             client_list[recieve_id].sendall(
                                 f"Message from {id}: {message}".encode()
                             )
