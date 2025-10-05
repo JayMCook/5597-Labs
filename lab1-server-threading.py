@@ -43,13 +43,13 @@ def link_handler(link, client, id):
         if client_data.startswith("history "):
             try:
                 _, recieve_id = client_data.split(" ", 1)
-                chat_key = tuple(sorted([id, target_id]))
+                chat_key = tuple(sorted([id, recieve_id]))
                 with lock:
                     if chat_key in chat_logs:
                         history = "\n".join(chat_logs[chat_key])
-                        link.sendall(f"Chat history with {target_id}:\n{history}".encode())
+                        link.sendall(f"Chat history with {recieve_id}:\n{history}".encode())
                     else:
-                        link.sendall(f"No chat history with {target_id}".encode())
+                        link.sendall(f"No chat history with {recieve_id}".encode())
             except ValueError:
                 link.sendall(b"Usage: history (recipient id)")
             continue

@@ -33,7 +33,5 @@ while True:
     if inp == "exit":
         print("communication end！")
         break
-
-    server_reply = s.recv(1024).decode()
-    print(server_reply)
+        
 s.close()
