@@ -14,7 +14,7 @@ def link_handler(link, client, id):
         client_list[id] = link
 
     print(f'server start to receiving msg from {id} ({client[0]}: {client[1]})....')
-    link.sendall(f'Your ID is: {id}. \nCommand list: \n"list" - Displays a list of the active client IDs. \n"msg" followed by another client ID and a string - Will send the string along with your client ID to the client whos ID you entered.\n "history" followed by another client ID - Provides a chat log history between the client and provided client id \n"exit" - Ends connection and removes client ID from client list.'.encode())
+    link.sendall(f'Your ID is: {id}. \nCommand list: \n"list" - Displays a list of the active client IDs. \n"forward" followed by another client ID and a string - Will send the string along with your client ID to the client whos ID you entered.\n "history" followed by another client ID - Provides a chat log history between the client and provided client id \n"exit" - Ends connection and removes client ID from client list.'.encode())
     while True:
         client_data = link.recv(1024).decode()
         #When client requests "list" the IDs are compiled from the client list and displayed to the client
@@ -25,7 +25,7 @@ def link_handler(link, client, id):
             continue
         #When client starts an input with msg, the program checks if it follows the correct syntax, and then sends 
         #the desired message to the reciever id, or return an error if the syntax is incorrect
-        if client_data.startswith("msg "):
+        if client_data.startswith("forward "):
             try:
                 _, recieve_id, message = client_data.split(" ", 2)
                 with lock:
@@ -43,7 +43,7 @@ def link_handler(link, client, id):
                         else:
                             link.sendall(f"Client {recieve_id} not found".encode())
             except ValueError:
-                link.sendall(b"Usage: msg (recipient id) (desired message)")
+                link.sendall(b"Usage: forward (recipient id) (desired message)")
             continue
         #When client starts an input with history, the program produces a log of their chat history with the provided id
         if client_data.startswith("history "):
