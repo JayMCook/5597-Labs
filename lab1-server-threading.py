@@ -58,7 +58,6 @@ def link_handler(link, client, id):
             continue
         if client_data == "exit":
             print(f'communication end with {id} ({client[0]}: {client[1]})....')
-            link.sendall('Goodbye!'.encode())
             break
         print(f'{id} ({client[0]}, {client[1]}) sent {client_data}....' )
         link.sendall(f'Please use one of the four commands listed upon connection, {id}'.encode())

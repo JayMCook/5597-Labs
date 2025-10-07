@@ -37,6 +37,7 @@ while True:
     s.sendall(inp.encode())
 
     if inp == "exit":
+        print("Goodbye!")
         break
 
 s.close()
