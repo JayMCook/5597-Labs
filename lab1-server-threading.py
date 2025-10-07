@@ -47,17 +47,14 @@ def link_handler(link, client, id):
             continue
         #When client starts an input with history, the program produces a log of their chat history with the provided id
         if client_data.startswith("history "):
-            try:
-                _, recieve_id = client_data.split(" ", 1)
-                chat_key = tuple(sorted([id, recieve_id]))
-                with lock:
-                    if chat_key in chat_logs:
-                        history = "\n".join(chat_logs[chat_key])
-                        link.sendall(f"Chat history with {recieve_id}:\n{history}".encode())
-                    else:
-                        link.sendall(f"No chat history with {recieve_id}".encode())
-            except ValueError:
-                link.sendall(b"Usage: history (recipient id)")
+            _, recieve_id = client_data.split(" ", 1)
+            chat_key = tuple(sorted([id, recieve_id]))
+            with lock:
+                if chat_key in chat_logs:
+                    history = "\n".join(chat_logs[chat_key])
+                    link.sendall(f"Chat history with {recieve_id}:\n{history}".encode())
+                else:
+                    link.sendall(f"No chat history with {recieve_id}".encode())
             continue
         if client_data == "exit":
             print(f'communication end with {id} ({client[0]}: {client[1]})....')
