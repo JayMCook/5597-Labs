@@ -30,14 +30,13 @@ print(client_id)
 threading.Thread(target=recieve_message, args=(s,), daemon=True).start()
 
 
-#while True:
-#    inp = input('input command： ').strip()
-#    if not inp:
-#        continue
-#    s.sendall(inp.encode())
-#
-#    if inp == "exit":
-#        print("communication end！")
-#        break
+while True:
+    inp = input('input command： ').strip()
+    if not inp:
+        continue
+    s.sendall(inp.encode())
+
+    if inp == "exit":
+        break
 
 s.close()
