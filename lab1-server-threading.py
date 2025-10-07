@@ -64,7 +64,7 @@ def link_handler(link, client, id):
             link.sendall('Goodbye!'.encode())
             break
         print(f'{id} ({client[0]}, {client[1]}) sent {client_data}....' )
-        link.sendall(f'server had received your msg, {id}'.encode())
+        link.sendall(f'Please use one of the four commands listed upon connection, {id}'.encode())
     link.close()
     with lock:
         if id in client_list:
